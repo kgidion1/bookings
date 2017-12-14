@@ -16,28 +16,26 @@
 
     <%- defineContent('booking') %>
 
-
-
-
-
-
-
-<script type="text/javascript" src="/js/jquery-3.2.1.slim.min.js"></script>
+<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/popper.min.js"></script>
 <script src="/js/datepicker.min.js"></script>
 <!-- Include English language -->
 <script src="/js/i18n/datepicker.en.js"></script>
 <script type="text/javascript" src="/js/sweetalert2.all.js"></script>
+    <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 <script type="text/javascript">
-      $(document).ready(function () {
-        // Initialization
-      $('#checkin').datepicker({});
-      $('#checkout').datepicker({});
-    });
+  $(document).ready(function () {
+    // Initialization
+  $('#checkin').datepicker({});
+  $('#checkout').datepicker({});
+});
 
 
-$('.btn-next').click(function(e){
+$('.btn-next').on('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
 
 var fname = $('#input-name').val();
 var email = $('#input-email').val();
@@ -48,49 +46,38 @@ var mobile = $('#input-phone').val();
 var rooms = $('#rooms').val();
 
 
-if($('#credit_card').is(':checked')){
-  e.preventDefault();
-  swal("Alert","Credit Card, Coming Soon ..", "info");
-}
-
-else if($('#airtel_money').is(':checked'))
-{
-  e.preventDefault();
-  swal("Alert","Airtel Money, Coming Soon ..", "info");
-}
-else if($('#mtn_momo').is(':checked'))
-{
-  e.preventDefault();
-  swal("Alert","MTN Mobile Money, Coming Soon ..", "info");
-}else if($('#other').is(':checked')){
-  e.preventDefault();
+if($('#other').is(':checked')){
+//  e.preventDefault();
   swal("Alert","Other payment methods like credit card, mobile money etc coming soon, please choose cash for now","info");
 }
 else if($('#cash').is(':checked')) {
 //  e.default;
-    e.preventDefault();
     var current_date = new Date().toLocaleDateString();
-    if (datein < current_date) {
+    date_in = new Date(datein).toLocaleDateString();
+    date_out = new Date(dateout).toLocaleDateString()
+    // console.log(new Date(datein).toLocaleDateString(), current_date)
+    
+    if (date_in < current_date) {
         swal("Incorrect Date", "Checkin date can't be earlier than today's date?", "error");
     }
-    else if (datein === dateout) {
+    else if (date_in === date_out) {
         swal("Incorrect Date", "Checkin date can't be the same as Checkout date", "error");
     }
-    else if (datein > dateout) {
+    else if (date_in > date_out) {
         swal("Incorrect Dates", "Checkin date can't be later / greater than Checkout date", "error");
     }
     else {
-//        var duration = dateout - datein;
         var timeDiff = Math.abs(new Date(dateout).getTime() - new Date(datein).getTime());
         var duration = Math.ceil(timeDiff / (1000 * 3600 * 24));
         var amount = 300 * duration;
-//        swal("Period Your Staying", duration+" days", "info");
+        amount = '$'+amount;
+        // console.log(new Date(dateout).getDate() );
 
         swal({
-            title: 'Hello  ' + fname +' your booking summary',
+            title: '<b>Hello  ' + fname + ' your booking summary<b>',
             html: '<b>Room Type:</b> &nbsp;&nbsp;' + rooms + '<br> ' +
-            '<b>Check In:</b> &nbsp; &nbsp;' + datein + '<br>' +
-            '<b>Check Out:</b> &nbsp; &nbsp;' + dateout + '<br>' +
+            '<b>Check In:</b> &nbsp; &nbsp;' + date_in + '<br>' +
+            '<b>Check Out:</b> &nbsp; &nbsp;' + date_out + '<br>' +
             '<b>Payment Method:</b> &nbsp; &nbsp;Cash on arrival<br>' +
             '<br>' +
             '<p><b>Total Amount:</b> <span class="badge badge-success">$' + amount + '</span><br></p>'
@@ -99,8 +86,37 @@ else if($('#cash').is(':checked')) {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm Booking'
-        }).then((result)=>{
+            confirmButtonText: 'Confirm Booking',
+            preConfirm: function () {
+                
+                return new Promise(function (resolve, reject) {
+                    var data = {};
+                    data.fullname = fname;
+                    data.email = email;
+                    data.pay = paymethod;
+                    data.checkin_date = date_in;
+                    data.checkout_date = date_out;
+                    data.phonenumber = mobile;
+                    data.current_date = current_date;
+                    data.rooms = rooms;
+                    data.amount = amount;
+                    $.ajax({
+                        url: "/addcustomer",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(data),
+                        success: function(response) {
+                            console.log("Data submitted");
+                            resolve(response)
+                        },
+                        error: function(a, b, c){
+                            reject("error message")
+                        }
+                    })
+                })
+            },
+            allowOutsideClick: false
+           }).then((result)=>{
             console.log(result.value);
             if(result.value){
                 $('#input-name').val('');
@@ -110,32 +126,15 @@ else if($('#cash').is(':checked')) {
                 $('#input-phone').val('');
 
                 swal('Congratulations', 'Your Booking order is well received', 'success');
-//                $.ajax({
-//                    type: "POST",
-//                    data: {email: email, pay: paymethod, checkin_date: datein, checkout_date: dateout, phonenumber: mobile, current_date: current_date},
-//                    url: "/addcustomer"
-//                })
-//                .done(function (data) {
-//                    swal('Congratulations', 'Your Booking order is well received', 'success');
-//                })
-//                .error(function (data) {
-//                    swal('Ooops', 'Request unsuccessful, pliz try again', 'error');
-//                })
             } else {
-//                swal('Ooops', 'Request unsuccessful, pliz try again', 'error');
+                // swal('Oops', 'Something went wrong, please try again or contact us!', 'error');
                 return;
             }
         });
-    }
-  }
-// if(datein != ""){
-//  e.preventDefault();
-//  swal("Sorry",paymethod, "error");
-//  // alert(paymethod);
-// }
 
+        }
+    }   
 });
-
 
     </script>
   </body>

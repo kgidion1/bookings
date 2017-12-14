@@ -4,7 +4,7 @@
     	<div class="row">
     		<div class="col-md-6 mx-auto">
     			<!-- <legend  class="text-center" style="font-size: 16px;">Welcome to <%= title %></legend>  method="post" action="/addcustomer" -->
-    			<form role="form" class="form-horizontal">
+    			<form role="form" id="form_data" class="form-horizontal" method="post" action="/addcustomer">
     				<legend class="text-center">Book This Room</legend>
     				 <div class="row">
     				 	<div class="col-sm-6">
@@ -60,7 +60,7 @@
           <div class="col-sm-6">
           <div class="form-group">
           <label for="input-text" class="control-label">Room Type(s)</label>
-            <select class="form-control" id="rooms">
+            <select class="form-control" name="rooms" id="rooms">
             <option>Deluxe Diplomatic Suite</option>
             <option>Executive Room</option>
             <option>Diplomatic Suite</option>

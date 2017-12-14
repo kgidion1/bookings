@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var mailer = require('express-mailer');
 var expressLayouts = require('express-ejs-layouts');
 
-
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodetest1');
@@ -32,19 +31,17 @@ var app = express();
 //     console.log(info.messageId);
 // });
 
-
-
-mailer.extend(app, {
-  from: 'no-reply@hivetechug.com',
-  host: 'smtp.gmail.com', // hostname 
-  secureConnection: true, // use SSL 
-  port: 465, // port for secure SMTP 
-  transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts 
-  auth: {
-    user: 'kgidion1@gmail.com',
-    pass: 'kalemera9209'
-  }
-});
+// mailer.extend(app, {
+//   from: 'no-reply@hivetechug.com',
+//   host: 'smtp.gmail.com', // hostname 
+//   secureConnection: true, // use SSL 
+//   port: 465, // port for secure SMTP 
+//   transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts 
+//   auth: {
+//     user: 'kgidion1@gmail.com',
+//     pass: 'kalemera9209'
+//   }
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
