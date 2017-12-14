@@ -82,7 +82,7 @@ var mailoutput = "<html>\n\
 
 //Mail options
 mailOpts = {
-    to: "Hotel Guide <kgidion1@hivetechug.com>",
+    to: "Hotel Guide <obia.williams@gmail.com>",
     subject: "Testing Nodemailer",
     html: mailoutput
 };                        
