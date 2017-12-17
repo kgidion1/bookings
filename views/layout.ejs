@@ -56,7 +56,7 @@ else if($('#cash').is(':checked')) {
     date_in = new Date(datein).toLocaleDateString();
     date_out = new Date(dateout).toLocaleDateString()
     // console.log(new Date(datein).toLocaleDateString(), current_date)
-    
+
     if (date_in < current_date) {
         swal("Incorrect Date", "Checkin date can't be earlier than today's date?", "error");
     }
@@ -80,7 +80,7 @@ else if($('#cash').is(':checked')) {
             '<b>Check Out:</b> &nbsp; &nbsp;' + date_out + '<br>' +
             '<b>Payment Method:</b> &nbsp; &nbsp;Cash on arrival<br>' +
             '<br>' +
-            '<p><b>Total Amount:</b> <span class="badge badge-success">$' + amount + '</span><br></p>'
+            '<p><b>Total Amount:</b> <span class="badge badge-success">' + amount + '</span><br></p>'
             ,
             type: 'info',
             showCancelButton: true,
@@ -88,7 +88,7 @@ else if($('#cash').is(':checked')) {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Confirm Booking',
             preConfirm: function () {
-                
+
                 return new Promise(function (resolve, reject) {
                     var data = {};
                     data.fullname = fname;
@@ -133,7 +133,7 @@ else if($('#cash').is(':checked')) {
         });
 
         }
-    }   
+    }
 });
 
     </script>
