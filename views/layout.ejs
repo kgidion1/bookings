@@ -70,7 +70,7 @@ else if($('#cash').is(':checked')) {
         var timeDiff = Math.abs(new Date(dateout).getTime() - new Date(datein).getTime());
         var duration = Math.ceil(timeDiff / (1000 * 3600 * 24));
         var amount = 300 * duration;
-        amount = amount;
+        amount = '$'+amount;
         // console.log(new Date(dateout).getDate() );
 
         swal({
