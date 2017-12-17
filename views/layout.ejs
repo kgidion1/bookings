@@ -70,7 +70,7 @@ else if($('#cash').is(':checked')) {
         var timeDiff = Math.abs(new Date(dateout).getTime() - new Date(datein).getTime());
         var duration = Math.ceil(timeDiff / (1000 * 3600 * 24));
         var amount = 300 * duration;
-        amount = '$'+amount;
+        amount = amount;
         // console.log(new Date(dateout).getDate() );
 
         swal({
@@ -80,7 +80,7 @@ else if($('#cash').is(':checked')) {
             '<b>Check Out:</b> &nbsp; &nbsp;' + date_out + '<br>' +
             '<b>Payment Method:</b> &nbsp; &nbsp;Cash on arrival<br>' +
             '<br>' +
-            '<p><b>Total Amount:</b> <span class="badge badge-success">' + amount + '</span><br></p>'
+            '<p><b>Total Amount:</b> <span class="badge badge-success">$' + amount + '</span><br></p>'
             ,
             type: 'info',
             showCancelButton: true,
